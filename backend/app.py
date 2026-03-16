@@ -43,6 +43,28 @@ ESG_MIN_HITS = 3
 
 ANALYZED: dict[str, dict] = {}
 
+# region agent log
+def _dbglog(message: str, data: dict | None = None, runId: str = "pre-fix", hypothesisId: str = "A"):
+    """NDJSON debug logger (debug mode)."""
+    try:
+        import json, time
+        payload = {
+            "sessionId": "c59668",
+            "runId": runId,
+            "hypothesisId": hypothesisId,
+            "location": "backend/app.py",
+            "message": message,
+            "data": data or {},
+            "timestamp": int(time.time() * 1000),
+        }
+        root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        log_path = os.path.join(root, "debug-c59668.log")
+        with open(log_path, "a", encoding="utf-8") as f:
+            f.write(json.dumps(payload, ensure_ascii=False) + "\n")
+    except Exception:
+        pass
+# endregion agent log
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Helpers
@@ -436,7 +458,6 @@ def fetch_report():
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
-
 # ─────────────────────────────────────────────────────────────────────────────
 # Main Analysis Pipeline (manual upload)
 # ─────────────────────────────────────────────────────────────────────────────
@@ -666,6 +687,54 @@ def companies():
             for k, v in ANALYZED.items()
         },
     })
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Audio / Video ESG Analysis (VLM powered)
+# ─────────────────────────────────────────────────────────────────────────────
+MEDIA_VIDEO_EXT = {'.mp4', '.mov', '.avi', '.mkv', '.webm'}
+MEDIA_AUDIO_EXT = {'.mp3', '.wav', '.m4a', '.ogg', '.flac', '.aac'}
+MEDIA_MAX_MB    = 200
+
+
+@app.route('/api/analyze_media', methods=['POST'])
+def analyze_media_route():
+    _dbglog("analyze_media_route:enter", {"has_file": bool(request.files.get("file")), "company": (request.form.get("company") or "")[:80]}, runId="pre-fix", hypothesisId="A")
+    try:
+        file    = request.files.get('file')
+        company = (request.form.get('company') or '').strip()
+
+        if not file or not file.filename:
+            return jsonify({'error': 'No file provided'}), 400
+
+        filename = file.filename
+        ext      = os.path.splitext(filename.lower())[1]
+
+        if ext not in (MEDIA_VIDEO_EXT | MEDIA_AUDIO_EXT):
+            return jsonify({'error': f'Unsupported media format: {ext}. '
+                            f'Supported: {sorted(MEDIA_VIDEO_EXT | MEDIA_AUDIO_EXT)}'}), 415
+
+        file_bytes = file.read()
+        size_mb    = len(file_bytes) / 1024 / 1024
+        if size_mb > MEDIA_MAX_MB:
+            return jsonify({'error': f'File too large ({size_mb:.1f} MB). Max: {MEDIA_MAX_MB} MB.'}), 413
+
+        if not company:
+            company = os.path.splitext(filename)[0].replace('_', ' ').replace('-', ' ').strip()
+
+        from media_analysis import analyze_media
+        result = analyze_media(file_bytes, filename, company)
+        _dbglog("analyze_media_route:analyzed", {"company": company[:120], "vlm_available": bool((result or {}).get("vlm_available")), "media_type": (result or {}).get("media_type")}, runId="pre-fix", hypothesisId="A")
+
+        if isinstance(result, dict) and 'error' in result:
+            return jsonify(result), 422
+
+        return jsonify(result)
+
+    except Exception as e:
+        traceback.print_exc()
+        _dbglog("analyze_media_route:exception", {"error": str(e)[:500]}, runId="pre-fix", hypothesisId="A")
+        return jsonify({'error': str(e)}), 500
 
 
 # ─────────────────────────────────────────────────────────────────────────────
