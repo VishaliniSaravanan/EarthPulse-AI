@@ -1,6 +1,6 @@
 # ESG Intelligence Platform v2.0
 
-A complete AI-powered ESG intelligence platform. Full working implementation
+An end-to-end AI-powered platform designed to analyze corporate ESG (Environmental, Social, Governance) reports and generate actionable insights. It ingests PDF disclosures, extracts structured data, builds semantic and graph-based intelligence layers, and delivers advanced analytics like climate risk scoring, greenwashing detection, ESG credit ratings, and financing recommendations through an interactive dashboard.
 
 ## Architecture
 
