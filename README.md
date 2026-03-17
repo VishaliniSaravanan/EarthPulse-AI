@@ -1,4 +1,4 @@
-# ESG Intelligence Platform v2.0
+# EarthPulse AI — Climate Risk & Multimodal Document Intelligence RAG Platform
 
 An end-to-end AI-powered platform designed to analyze corporate ESG (Environmental, Social, Governance) reports and generate actionable insights. It ingests PDF disclosures, extracts structured data, builds semantic and graph-based intelligence layers, and delivers advanced analytics like climate risk scoring, greenwashing detection, ESG credit ratings, and financing recommendations through an interactive dashboard.
 
@@ -77,9 +77,9 @@ npm run dev
 |----------|--------|-------------|
 | `/api/health` | GET | Health check |
 | `/api/analyze` | POST | Full analysis pipeline |
-| `/api/query` | POST | HyperRAG query |
+| `/api/query` | POST | Graph-Augmented RAG query |
 | `/api/greenwashing/:company` | GET | Greenwashing report |
-| `/api/graph/hyperrag/:company` | GET | HyperRAG graph data |
+| `/api/graph/hyperrag/:company` | GET | Graph-Augmented RAG graph data |
 | `/api/graph/discourse/:company` | GET | Discourse graph data |
 | `/api/supply_chain/:company` | GET | Supply chain data |
 | `/api/esg_credit_score/:company` | GET | ESG-CAM + financing |
