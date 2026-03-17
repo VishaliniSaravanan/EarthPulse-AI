@@ -22,7 +22,7 @@ const STEPS = [
   'Uploading media file…',
   'Extracting keyframes…',
   'Transcribing audio…',
-  'Running VLM ESG analysis…',
+  'Running vision-language analysis…',
   'Structuring results…',
 ]
 
@@ -196,7 +196,7 @@ function ClaimsPanel({ r }) {
     <div className="card fade-up">
       <div className="card-header">
         <MessageSquare size={14} style={{ color: 'var(--accent)' }} />
-        <span style={{ fontWeight: 600 }}>Key ESG Claims</span>
+        <span style={{ fontWeight: 600 }}>Key Climate / Sustainability Claims</span>
         <span className="badge badge-blue" style={{ marginLeft: 'auto' }}>{claims.length}</span>
       </div>
       <div className="card-body" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -343,14 +343,14 @@ export default function MediaAnalysisPage({ company }) {
           {isVideo
             ? <Video size={14} style={{ color: 'var(--accent)' }} />
             : <Music size={14} style={{ color: 'var(--purple)' }} />}
-          <span style={{ fontWeight: 600 }}>Audio / Video ESG Analyser</span>
+          <span style={{ fontWeight: 600 }}>Audio / Video Analyser</span>
           <span className="badge badge-blue" style={{ marginLeft: 'auto' }}>VLM · Whisper</span>
         </div>
         <div className="card-body" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <p style={{ margin: 0, fontSize: 13, color: 'var(--text2)', lineHeight: 1.7 }}>
             Upload a sustainability presentation, earnings call, investor day video, or audio
             briefing. Keyframes are extracted and speech is transcribed, then Claude Vision
-            analyses ESG content, detects claims, and flags greenwashing.
+            analyses climate and sustainability content, detects claims, and flags greenwashing.
           </p>
 
           {/* Name input + clear button */}
@@ -358,7 +358,7 @@ export default function MediaAnalysisPage({ company }) {
             <div>
               <div className="label" style={{ marginBottom: 4 }}>Company / Presentation Name</div>
               <input value={name} onChange={e => setName(e.target.value)}
-                placeholder="e.g. Acme Corp ESG Briefing 2024" disabled={loading} />
+                placeholder="e.g. Acme Corp Climate Briefing 2024" disabled={loading} />
             </div>
             {file && (
               <div style={{ display: 'flex', alignItems: 'flex-end' }}>
@@ -464,7 +464,7 @@ export default function MediaAnalysisPage({ company }) {
             ['🎙 Whisper STT', 'Tiny model, fast'],
             ['🤖 Claude VLM', 'Vision + language'],
             ['🛡 Greenwashing', 'Flag detection'],
-            ['📊 ESG Score', 'AI-estimated 0–100'],
+            ['📊 Impact Score', 'AI-estimated 0–100'],
             ['🔒 No storage', 'Processed in-memory'],
           ].map(([t, d]) => (
             <div key={t} className="card" style={{ padding: '10px 12px', textAlign: 'center' }}>

@@ -23,13 +23,13 @@ const ESG_KEYWORDS = [
 
 const PIPELINE_STEPS = [
   'File parsing & format detection',
-  'ESG content validation',
+  'Content validation',
   'Section detection',
   'Semantic chunking',
   'Embedding generation',
   'Qdrant vector indexing',
-  'HyperRAG graph construction',
-  'ESG metrics extraction',
+  'Graph-Augmented RAG construction',
+  'Impact metrics extraction',
   'Discourse graph analysis',
   'Greenwashing detection',
   'Supply chain extraction',
@@ -110,7 +110,7 @@ export default function UploadPage({ onAnalyzed }) {
         const hits = ESG_KEYWORDS.filter(kw => text.toLowerCase().includes(kw))
         if (hits.length === 0) {
           setFileValidation('invalid')
-          setValidationMsg('This does not appear to be an ESG report. Please upload an ESG or sustainability report.')
+          setValidationMsg('This does not appear to be a climate or sustainability report. Please upload a relevant report.')
           return false
         }
       } catch {}
@@ -192,8 +192,8 @@ export default function UploadPage({ onAnalyzed }) {
     try {
       const result = await analyzeESG(file, company.trim(), sector, setProgress)
       if (result.esg_validation === false) {
-        setFileValidation('invalid'); setValidationMsg(result.validation_reason || 'Not an ESG report.')
-        setError('Please upload an ESG Report.'); return
+        setFileValidation('invalid'); setValidationMsg(result.validation_reason || 'Not a suitable climate or sustainability report.')
+        setError('Please upload a suitable report.'); return
       }
       clearInterval(iv); setDone(true)
       setTimeout(() => onAnalyzed(result, file), 600)
@@ -221,7 +221,7 @@ export default function UploadPage({ onAnalyzed }) {
   return (
     <div style={{ maxWidth: 1020, margin: '0 auto', padding: '0 12px' }} className="fade-up">
       <div style={{ marginBottom: 24 }}>
-        <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 6 }}>Upload ESG Report</div>
+        <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 6 }}>Upload Climate / Sustainability Report</div>
         <div style={{ color: 'var(--text2)', fontSize: 13 }}>
           Upload a file, fetch from any URL, or pick from your local PDF library.
           Supports PDF, DOCX, TXT, HTML · up to {MAX_FILE_SIZE_MB} MB.

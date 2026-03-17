@@ -264,7 +264,7 @@ async function downloadHighlightedPdf(pages, annotations, company) {
         font-family:Georgia,serif;font-size:13.5px;line-height:1.75;color:#1a1a1a;">
         <div style="font-size:10px;color:#9ca3af;border-bottom:1px solid #e5e7eb;padding-bottom:8px;margin-bottom:20px;
           display:flex;justify-content:space-between;">
-          <span>${escHtml(company)} — ESG Report (Annotated)</span>
+          <span>${escHtml(company)} — Report (Annotated)</span>
           <span>Page ${pg.pageNum}</span>
         </div>
         <div style="white-space:pre-wrap;">${spanHtml}</div>
@@ -282,7 +282,7 @@ async function downloadHighlightedPdf(pages, annotations, company) {
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>${escHtml(company)} — ESG Report (Highlighted)</title>
+<title>${escHtml(company)} — Report (Highlighted)</title>
 <style>
   body { background:#f3f4f6; margin:0; padding:32px 16px; font-family:Georgia,serif; }
   @media print {
@@ -298,7 +298,7 @@ async function downloadHighlightedPdf(pages, annotations, company) {
     position:sticky;top:0;z-index:99;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
     font-family:Sora,sans-serif;">
     <strong style="font-size:14px;color:#111827;">${escHtml(company)}</strong>
-    <span style="font-size:12px;color:#6b7280;">ESG Report — Annotated Highlights</span>
+    <span style="font-size:12px;color:#6b7280;">Report — Annotated Highlights</span>
     <div style="margin-left:auto;display:flex;flex-wrap:wrap;gap:4px;">${legend}</div>
     <button onclick="window.print()" style="padding:6px 16px;background:#2E7D32;color:white;border:none;
       border-radius:6px;cursor:pointer;font-size:12px;font-family:Sora,sans-serif;">⬇ Print / Save as PDF</button>
@@ -313,7 +313,7 @@ async function downloadHighlightedPdf(pages, annotations, company) {
   const url  = URL.createObjectURL(blob)
   const a    = document.createElement('a')
   a.href     = url
-  a.download = `${company.replace(/\s+/g,'_')}_ESG_Highlighted.html`
+  a.download = `${company.replace(/\s+/g,'_')}_Highlighted.html`
   a.click()
   URL.revokeObjectURL(url)
 }
@@ -343,7 +343,7 @@ export default function PDFAnalysisPage({ data, company, pdfFileRef }) {
   const [dlStatus,      setDlStatus]      = useState('idle') // idle|working|done
   const fileInputRef = useRef()
 
-  // ── Raw ESG data ────────────────────────────────────────────────────────────
+  // ── Raw score data ─────────────────────────────────────────────────────────
   const gw             = data?.greenwashing  || {}
   const metrics        = data?.metrics       || {}
   const scores         = metrics?.esg_scores || {}
@@ -535,7 +535,7 @@ export default function PDFAnalysisPage({ data, company, pdfFileRef }) {
       addSentences(vagueRaw, () => 'vague')
       return ann
     })
-    await downloadHighlightedPdf(pages, perPageAnnotations, company || 'ESG-Report')
+    await downloadHighlightedPdf(pages, perPageAnnotations, company || 'Report')
     setDlStatus('done')
     setTimeout(() => setDlStatus('idle'), 3000)
   }
@@ -569,7 +569,7 @@ export default function PDFAnalysisPage({ data, company, pdfFileRef }) {
         }}>
           <FileSearch size={14} style={{ color: '#2E7D32', flexShrink: 0 }} />
           <span style={{ fontSize: 13, fontWeight: 700, color: '#111827' }}>{company}</span>
-          <span style={{ fontSize: 11, color: '#9ca3af' }}>ESG Report Analyzer</span>
+          <span style={{ fontSize: 11, color: '#9ca3af' }}>Report Analyzer</span>
           <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
             {Object.keys(HL).map(k => <Pill key={k} type={k} />)}
           </div>
@@ -615,7 +615,7 @@ export default function PDFAnalysisPage({ data, company, pdfFileRef }) {
             }}>
               <Upload size={36} style={{ color: '#d1d5db', margin: '0 auto 14px' }} />
               <div style={{ fontSize: 15, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Load PDF to see highlights</div>
-              <div style={{ fontSize: 12, color: '#9ca3af' }}>Drop the same PDF here to overlay ESG claim highlights</div>
+              <div style={{ fontSize: 12, color: '#9ca3af' }}>Drop the same PDF here to overlay claim highlights</div>
             </div>
           )}
 
@@ -708,7 +708,7 @@ export default function PDFAnalysisPage({ data, company, pdfFileRef }) {
         {/* tab bar */}
         <div style={{ display: 'flex', borderBottom: '1px solid rgba(46,125,50,0.3)', flexShrink: 0 }}>
           {[
-            { id: 'score',    label: 'ESG Report' },
+            { id: 'score',    label: 'Report' },
             { id: 'claims',   label: `Claims (${claims.length})` },
             { id: 'evidence', label: `Evidence (${evidences.length})` },
           ].map(t => (
@@ -725,12 +725,12 @@ export default function PDFAnalysisPage({ data, company, pdfFileRef }) {
         {/* panel content */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '14px 14px', display: 'flex', flexDirection: 'column', gap: 12 }}>
 
-          {/* ── ESG SCORE TAB ── */}
+          {/* ── SCORE TAB ── */}
           {activeTab === 'score' && <>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 6, gap: 4 }}>
               <Ring score={composite} size={90} />
               <div style={{ fontSize: 13, fontWeight: 700, color: composite >= 70 ? '#2E7D32' : composite >= 45 ? '#d97706' : '#dc2626', marginTop: 2 }}>
-                {composite >= 70 ? 'Strong ESG' : composite >= 45 ? 'Moderate ESG' : 'Weak ESG'}
+                {composite >= 70 ? 'High impact' : composite >= 45 ? 'Moderate impact' : 'Low impact'}
               </div>
               <div style={{ fontSize: 10.5, color: '#9ca3af' }}>Analyzed across {data?.page_count || pages.length} pages</div>
             </div>
@@ -760,7 +760,7 @@ export default function PDFAnalysisPage({ data, company, pdfFileRef }) {
               </div>
 
               <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: '#9ca3af', margin: '10px 0 6px' }}>
-                ESG CLAIM SENTENCES
+                CLAIM SENTENCES
               </div>
               {[
                 { label: 'Supported Claims',   count: supportedCount,   dot: HL.supported.dot   },

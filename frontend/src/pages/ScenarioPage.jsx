@@ -4,7 +4,7 @@ import { Spinner, EmptyState } from '../components/ui'
 import { Zap, TrendingUp, CheckCircle } from 'lucide-react'
 
 export default function ScenarioPage({ data, company }) {
-  if (!company) return <EmptyState icon="SC" title="No report loaded" desc="Upload a report to simulate ESG scenarios." />
+  if (!company) return <EmptyState icon="SC" title="No report loaded" desc="Upload a report to simulate climate and impact scenarios." />
 
   const [scenario, setScenario] = useState('all')
   const [params, setParams] = useState({ target_renewable_pct: 80, supply_chain_reduction_pct: 20, emissions_reduction_pct: 30 })
@@ -73,7 +73,7 @@ export default function ScenarioPage({ data, company }) {
       {(result || data?.metrics) && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
           {[
-            ['Current ESG Score', result?.current_esg_score ?? data?.metrics?.esg_scores?.composite, ''],
+            ['Current Score', result?.current_esg_score ?? data?.metrics?.esg_scores?.composite, ''],
             ['Scope 1', result?.current_scope1 ?? data?.metrics?.scope1, 'tCO₂'],
             ['Scope 2', result?.current_scope2 ?? data?.metrics?.scope2, 'tCO₂'],
             ['Scope 3', result?.current_scope3 ?? data?.metrics?.scope3, 'tCO₂'],
@@ -105,13 +105,13 @@ export default function ScenarioPage({ data, company }) {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 10 }}>
                   {s.esg_score_change !== undefined && (
                     <div className="metric-block">
-                      <div className="metric-label">ESG Score Change</div>
+                      <div className="metric-label">Score Change</div>
                       <div className="metric-value" style={{ color: 'var(--green)' }}>+{s.esg_score_change}</div>
                     </div>
                   )}
                   {s.new_esg_score !== undefined && (
                     <div className="metric-block">
-                      <div className="metric-label">New ESG Score</div>
+                      <div className="metric-label">New Score</div>
                       <div className="metric-value">{s.new_esg_score}</div>
                     </div>
                   )}
@@ -166,7 +166,7 @@ export default function ScenarioPage({ data, company }) {
           {result.sustainability_linked_loan_eligible && (
             <div className="alert alert-success" style={{ fontSize: 13 }}>
               <CheckCircle size={14} style={{ flexShrink: 0 }} />
-              This company qualifies for Sustainability-Linked Loan (SLL) instruments based on ESG performance.
+              This company qualifies for Sustainability-Linked Loan (SLL) instruments based on its impact performance.
             </div>
           )}
         </div>

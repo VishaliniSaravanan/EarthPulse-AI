@@ -48,14 +48,14 @@ export default function QueryPage({ company }) {
       <div className="card">
         <div className="card-header">
           <Search size={15} style={{ color: 'var(--accent)' }} />
-          <span style={{ fontWeight: 600 }}>HyperRAG Query Engine</span>
+          <span style={{ fontWeight: 600 }}>Graph-Augmented RAG Query Engine</span>
           {company && <span className="badge badge-blue" style={{ marginLeft: 'auto' }}>{company}</span>}
         </div>
         <div className="card-body" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           <div style={{ display: 'flex', gap: 8 }}>
             <input value={question} onChange={e => setQuestion(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && doQuery()}
-              placeholder="Ask anything about the ESG report..." style={{ flex: 1 }} />
+              placeholder="Ask anything about the report..." style={{ flex: 1 }} />
             <select value={section} onChange={e => setSection(e.target.value)} style={{ width: 140, flexShrink: 0 }}>
               {SECTIONS.map(s => <option key={s}>{s}</option>)}
             </select>
@@ -95,7 +95,7 @@ export default function QueryPage({ company }) {
         <div className="card" style={{ padding: 20 }}>
           <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 12 }}>
             <Spinner />
-            <span style={{ color: 'var(--text2)' }}>Traversing HyperRAG graph...</span>
+          <span style={{ color: 'var(--text2)' }}>Traversing Graph-Augmented RAG graph...</span>
           </div>
           {[80, 60, 90].map((w, i) => (
             <div key={i} style={{ height: 12, background: 'var(--surface2)', borderRadius: 4, marginBottom: 8, width: `${w}%` }} />

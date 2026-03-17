@@ -16,7 +16,7 @@ const fmt = (v, d = 1) => {
 const TT = { contentStyle: { background: '#fff', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 12, fontFamily: 'Sora' }, labelStyle: { color: '#475569' } }
 
 export default function MetricsPage({ data }) {
-  if (!data) return <EmptyState icon="MX" title="No data yet" desc="Upload and analyze an ESG report first." />
+  if (!data) return <EmptyState icon="MX" title="No data yet" desc="Upload and analyze a report first." />
 
   const m = data.metrics || {}
   const scores = m.esg_scores || {}
@@ -89,9 +89,9 @@ export default function MetricsPage({ data }) {
         </div>
       </div>
 
-      {/* ESG Sub-scores */}
+      {/* Sub-scores */}
       <div>
-        <div className="label" style={{ marginBottom: 10 }}>ESG Pillar Scores</div>
+        <div className="label" style={{ marginBottom: 10 }}>Pillar Scores</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
           {[
             { label: 'Environmental', score: scores.environmental || 50, color: 'var(--green)' },
@@ -135,7 +135,7 @@ export default function MetricsPage({ data }) {
 
         {/* Radar */}
         <div className="card">
-          <div className="card-header"><span className="label">ESG Performance Radar</span></div>
+          <div className="card-header"><span className="label">Performance Radar</span></div>
           <div className="card-body">
             <ResponsiveContainer width="100%" height={200}>
               <RadarChart data={radarData}>

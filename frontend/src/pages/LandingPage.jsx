@@ -54,7 +54,7 @@ export default function LandingPage({ onStart }) {
             <Leaf size={20} style={{ color: '#fff' }} />
           </div>
           <span style={{ fontSize: 18, fontWeight: 700, color: '#fff', letterSpacing: '0.02em' }}>
-            ESG Intelligence
+            EarthPulse AI
           </span>
         </div>
       </header>
@@ -82,7 +82,7 @@ export default function LandingPage({ onStart }) {
             letterSpacing: '0.02em',
             textShadow: '0 2px 20px rgba(0,0,0,0.12)',
           }}>
-            EarthPulse AI — Climate Risk & Multimodal ESG Document Intelligence RAG Platform
+            EarthPulse AI — Climate Risk & Multimodal Document Intelligence RAG Platform
           </h1>
           <p style={{
             fontSize: 18,
@@ -99,7 +99,8 @@ export default function LandingPage({ onStart }) {
             lineHeight: 1.75,
             marginBottom: 28,
           }}>
-            Analyze ESG and sustainability reports with document intelligence. Upload PDFs or fetch from URLs,
+            Analyze climate and sustainability reports with document intelligence. Upload PDFs or fetch from URLs,
+
             extract metrics, detect greenwashing, and explore climate risk, supply chain, and financing insights
             aligned with global standards and the UN Sustainable Development Goals.
           </p>

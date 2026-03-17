@@ -69,7 +69,7 @@ export default function GraphsPage({ company }) {
           {/* Tab toggle */}
           <div className="tab-nav" style={{ marginBottom: 16 }}>
             <button className={`tab-item ${tab === 'hyperrag' ? 'active' : ''}`} onClick={() => setTab('hyperrag')}>
-              <GitBranch size={13} /> HyperRAG Graph
+              <GitBranch size={13} /> Graph-Augmented RAG
             </button>
             <button className={`tab-item ${tab === 'discourse' ? 'active' : ''}`} onClick={() => setTab('discourse')}>
               <Network size={13} /> Discourse Graph

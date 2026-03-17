@@ -19,17 +19,17 @@ import MediaAnalysisPage from './pages/MediaAnalysisPage'
 import LandingPage       from './pages/LandingPage'
 
 const NAV = [
-  { key: 'upload',       label: 'Upload Report',  icon: Upload,      group: 'START',        free: true  },
-  { key: 'pdfview',      label: 'PDF Analyzer',   icon: FileSearch,  group: 'START',        free: false },
-  { key: 'media',        label: 'Audio / Video',  icon: Video,       group: 'START',        free: true  },
-  { key: 'metrics',      label: 'ESG Metrics',    icon: BarChart2,   group: 'ANALYTICS',    free: false },
-  { key: 'query',        label: 'Query Engine',   icon: Search,      group: 'ANALYTICS',    free: false },
-  { key: 'greenwashing', label: 'Greenwashing',   icon: ShieldAlert, group: 'ANALYTICS',    free: false },
-  { key: 'supply',       label: 'Supply Chain',   icon: Link2,       group: 'ANALYTICS',    free: false },
-  { key: 'climate',      label: 'Climate Risk',   icon: Globe2,      group: 'INTELLIGENCE', free: false },
-  { key: 'financing',    label: 'Financing',      icon: DollarSign,  group: 'INTELLIGENCE', free: false },
-  { key: 'scenario',     label: 'Scenarios',      icon: Zap,         group: 'INTELLIGENCE', free: false },
-  { key: 'graphs',       label: 'Graphs',         icon: Network,     group: 'INTELLIGENCE', free: false },
+  { key: 'upload',       label: 'Upload Report',              icon: Upload,     group: 'START',        free: true  },
+  { key: 'pdfview',      label: 'PDF Analyzer',               icon: FileSearch, group: 'START',        free: false },
+  { key: 'media',        label: 'Audio / Video',              icon: Video,      group: 'START',        free: true  },
+  { key: 'metrics',      label: 'Impact Metrics',             icon: BarChart2,  group: 'ANALYTICS',    free: false },
+  { key: 'query',        label: 'Graph-Augmented RAG Query',  icon: Search,     group: 'ANALYTICS',    free: false },
+  { key: 'greenwashing', label: 'Greenwashing',               icon: ShieldAlert,group: 'ANALYTICS',    free: false },
+  { key: 'supply',       label: 'Supply Chain',               icon: Link2,      group: 'ANALYTICS',    free: false },
+  { key: 'climate',      label: 'Climate Risk',               icon: Globe2,     group: 'INTELLIGENCE', free: false },
+  { key: 'financing',    label: 'Financing',                  icon: DollarSign, group: 'INTELLIGENCE', free: false },
+  { key: 'scenario',     label: 'Scenarios',                  icon: Zap,        group: 'INTELLIGENCE', free: false },
+  { key: 'graphs',       label: 'Graphs',                     icon: Network,    group: 'INTELLIGENCE', free: false },
 ]
 
 export default function App() {
@@ -95,8 +95,8 @@ export default function App() {
               <Globe2 size={14} style={{ color: 'white' }} />
             </div>
             <div>
-              <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--sidebar-text)' }}>ESG Intelligence</div>
-              <div style={{ fontSize: 10, color: 'var(--sidebar-text3)', fontFamily: 'JetBrains Mono' }}>v2.1 Platform</div>
+              <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--sidebar-text)' }}>EarthPulse AI</div>
+              <div style={{ fontSize: 10, color: 'var(--sidebar-text3)', fontFamily: 'JetBrains Mono' }}>Climate & Document RAG</div>
             </div>
           </div>
         </div>
@@ -108,7 +108,7 @@ export default function App() {
               textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>Active Report</div>
             <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--sidebar-text)' }}>{company}</div>
             <div style={{ fontSize: 11, color: 'var(--sidebar-text3)' }}>
-              {analysisData?.sector} · ESG {analysisData?.metrics?.esg_scores?.composite ?? '—'}
+              {analysisData?.sector} · Score {analysisData?.metrics?.esg_scores?.composite ?? '—'}
             </div>
           </div>
         )}
