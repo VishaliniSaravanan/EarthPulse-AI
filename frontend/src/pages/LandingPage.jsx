@@ -82,7 +82,7 @@ export default function LandingPage({ onStart }) {
             letterSpacing: '0.02em',
             textShadow: '0 2px 20px rgba(0,0,0,0.12)',
           }}>
-            MULTIMODAL ESG DOCUMENT INTELLIGENCE RAG PLATFORM
+            EarthPulse AI — Climate Risk & Multimodal ESG Document Intelligence RAG Platform
           </h1>
           <p style={{
             fontSize: 18,
