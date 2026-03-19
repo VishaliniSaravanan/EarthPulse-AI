@@ -147,16 +147,7 @@ export default function App() {
                         LOCKED
                       </span>
                     )}
-                    {key === 'media' && !isActive && (
-                      <span style={{ fontSize: 8, background: 'rgba(106,27,154,0.2)',
-                        color: 'var(--purple)', padding: '1px 5px', borderRadius: 99,
-                        fontFamily: 'JetBrains Mono' }}>NEW</span>
-                    )}
-                    {key === 'pdfview' && company && !isActive && (
-                      <span style={{ fontSize: 8, background: 'rgba(46,125,50,0.2)',
-                        color: 'var(--sidebar-text)', padding: '1px 5px', borderRadius: 99,
-                        fontFamily: 'JetBrains Mono' }}>NEW</span>
-                    )}
+                    
                   </button>
                 )
               })}

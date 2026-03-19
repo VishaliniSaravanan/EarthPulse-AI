@@ -16,11 +16,6 @@ MAX_FILE_SIZE_MB = 100
 MAX_FILE_SIZE    = MAX_FILE_SIZE_MB * 1024 * 1024
 app.config['MAX_CONTENT_LENGTH'] = MAX_FILE_SIZE
 
-# Folder containing your downloaded ESG PDFs.
-# Filename  →  company name  (underscores/dashes become spaces, extension stripped)
-# e.g.  esg_reports/Infosys ESG 2024-25.pdf  →  "Infosys ESG 2024-25"
-LOCAL_LIBRARY_FOLDER = os.path.join(os.path.dirname(__file__), 'esg_reports')
-
 SUPPORTED_MIMETYPES = {
     'application/pdf',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -188,7 +183,7 @@ def _wrap_plain_text(full_text: str, filename: str) -> dict:
 
 
 def _run_pipeline(full_text: str, doc: dict, company: str, sector: str, ext: str):
-    """Shared analysis pipeline used by both /api/analyze and /api/library/analyze."""
+    """Shared analysis pipeline used by /api/analyze."""
     from chunker import semantic_chunk
     chunks = semantic_chunk(doc['pages'], company, sector)
 
@@ -261,74 +256,6 @@ def health():
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Local Library — list PDFs from esg_reports folder
-# ─────────────────────────────────────────────────────────────────────────────
-@app.route('/api/library')
-def library():
-    folder = LOCAL_LIBRARY_FOLDER
-    os.makedirs(folder, exist_ok=True)
-    files = []
-    for fname in sorted(os.listdir(folder)):
-        ext = _extension(fname)
-        if ext not in SUPPORTED_EXTENSIONS:
-            continue
-        size_mb = round(os.path.getsize(os.path.join(folder, fname)) / 1024 / 1024, 2)
-        files.append({
-            'filename':     fname,
-            'company_name': _friendly_name(fname),
-            'size_mb':      size_mb,
-            'ext':          ext,
-        })
-    return jsonify({'files': files, 'folder': folder})
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# Local Library — analyze a file from esg_reports folder
-# ─────────────────────────────────────────────────────────────────────────────
-@app.route('/api/library/analyze', methods=['POST'])
-def library_analyze():
-    data      = request.json or {}
-    filename  = data.get('filename', '').strip()
-    sector    = data.get('sector', 'Other').strip()
-
-    if not filename:
-        return jsonify({'error': 'filename required'}), 400
-
-    safe_name = os.path.basename(filename)          # prevent path traversal
-    full_path = os.path.join(LOCAL_LIBRARY_FOLDER, safe_name)
-
-    if not os.path.isfile(full_path):
-        return jsonify({'error': f'File not found in library: {safe_name}'}), 404
-
-    company = _friendly_name(safe_name)
-    ext     = _extension(safe_name)
-
-    try:
-        with open(full_path, 'rb') as f:
-            file_bytes = f.read()
-
-        if len(file_bytes) > MAX_FILE_SIZE:
-            return jsonify({'error': f'File too large ({len(file_bytes)//1024//1024} MB).'}), 413
-
-        doc       = _extract_text_from_bytes(file_bytes, safe_name)
-        full_text = doc['full_text']
-
-        is_esg, reason = _validate_esg_content(full_text)
-        if not is_esg:
-            return jsonify({
-                'error': 'Not an ESG report. ' + reason,
-                'esg_validation': False,
-                'validation_reason': reason,
-            }), 422
-
-        return _run_pipeline(full_text, doc, company, sector, ext)
-
-    except Exception as e:
-        traceback.print_exc()
-        return jsonify({'error': str(e)}), 500
-
-
-# ─────────────────────────────────────────────────────────────────────────────
 # Fetch report from external URL
 # ─────────────────────────────────────────────────────────────────────────────
 @app.route('/api/fetch_report')
@@ -367,20 +294,20 @@ def fetch_report():
         is_pdf        = 'pdf' in content_type or url.lower().split('?')[0].endswith('.pdf')
         is_html       = 'html' in content_type
 
-        # ── Direct PDF ────────────────────────────────────────────────────────
-        if is_pdf:
-            chunks, total = [], 0
-            for chunk in r.iter_content(65536):
-                total += len(chunk)
-                if total > MAX_FILE_SIZE:
-                    return jsonify({'error': f'Remote PDF exceeds {MAX_FILE_SIZE_MB} MB.'}), 413
-                chunks.append(chunk)
-            file_bytes = b''.join(chunks)
-            filename   = url.rstrip('/').split('/')[-1].split('?')[0] or 'report.pdf'
-            return Response(file_bytes, content_type='application/pdf',
-                            headers={'Content-Disposition': f'attachment; filename="{filename}"',
-                                     'X-Detected-Filename': filename,
-                                     'X-File-Size': str(len(file_bytes))})
+        # # ── Direct PDF ────────────────────────────────────────────────────────
+        # if is_pdf:
+        #     chunks, total = [], 0
+        #     for chunk in r.iter_content(65536):
+        #         total += len(chunk)
+        #         if total > MAX_FILE_SIZE:
+        #             return jsonify({'error': f'Remote PDF exceeds {MAX_FILE_SIZE_MB} MB.'}), 413
+        #         chunks.append(chunk)
+        #     file_bytes = b''.join(chunks)
+        #     filename   = url.rstrip('/').split('/')[-1].split('?')[0] or 'report.pdf'
+        #     return Response(file_bytes, content_type='application/pdf',
+        #                     headers={'Content-Disposition': f'attachment; filename="{filename}"',
+        #                              'X-Detected-Filename': filename,
+        #                              'X-File-Size': str(len(file_bytes))})
 
         # ── HTML page — scan for embedded PDF link ────────────────────────────
         if is_html:
@@ -694,7 +621,7 @@ def companies():
 # ─────────────────────────────────────────────────────────────────────────────
 MEDIA_VIDEO_EXT = {'.mp4', '.mov', '.avi', '.mkv', '.webm'}
 MEDIA_AUDIO_EXT = {'.mp3', '.wav', '.m4a', '.ogg', '.flac', '.aac'}
-MEDIA_MAX_MB    = 200
+MEDIA_MAX_MB    = 100
 
 
 @app.route('/api/analyze_media', methods=['POST'])

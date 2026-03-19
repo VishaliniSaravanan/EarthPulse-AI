@@ -10,7 +10,7 @@ import { Spinner, ProgressBar } from '../components/ui'
 const VIDEO_EXT = ['.mp4', '.mov', '.avi', '.mkv', '.webm']
 const AUDIO_EXT = ['.mp3', '.wav', '.m4a', '.ogg', '.flac', '.aac']
 const ALL_EXT   = [...VIDEO_EXT, ...AUDIO_EXT]
-const MAX_MB    = 200
+const MAX_MB    = 100
 
 const fmtMB = (b) => (b / 1024 / 1024).toFixed(1) + ' MB'
 const sentimentColor = (s) =>
