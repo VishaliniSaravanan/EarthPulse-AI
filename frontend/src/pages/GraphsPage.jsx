@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
-import { getHyperRAGGraph, getDiscourseGraph } from '../utils/api'
+import { getGraphAugmentedRAGGraph, getDiscourseGraph } from '../utils/api'
 import { ForceGraph, Spinner, EmptyState } from '../components/ui'
 import { Network, GitBranch, RefreshCw } from 'lucide-react'
 
 export default function GraphsPage({ company }) {
-  const [tab, setTab] = useState('hyperrag')
-  const [hyperData, setHyperData] = useState(null)
+  const [tab, setTab] = useState('graph_augmented_rag')
+  const [graphData, setGraphData] = useState(null)
   const [discData, setDiscData] = useState(null)
   const [loading, setLoading] = useState(false)
   const [selectedNode, setSelectedNode] = useState(null)
@@ -16,8 +16,8 @@ export default function GraphsPage({ company }) {
     if (!company) return
     setLoading(true)
     try {
-      const [h, d] = await Promise.all([getHyperRAGGraph(company), getDiscourseGraph(company)])
-      setHyperData(h); setDiscData(d)
+      const [g, d] = await Promise.all([getGraphAugmentedRAGGraph(company), getDiscourseGraph(company)])
+      setGraphData(g); setDiscData(d)
     } catch (e) { console.error(e) }
     finally { setLoading(false) }
   }
@@ -30,14 +30,14 @@ export default function GraphsPage({ company }) {
     supply_chain: '#14b8a6', climate_risk: '#f97316', commitments: '#6366f1',
     finance: '#eab308', general: '#94a3b8'
   }
-  const hyperColorFn = (n) => SECTION_COLORS[n.section] || '#94a3b8'
+  const graphColorFn = (n) => SECTION_COLORS[n.section] || '#94a3b8'
   const discColorFn = (n) => n.type === 'claim' ? '#0ea5e9' : n.type === 'evidence' ? '#10b981' : '#f59e0b'
 
-  const current = tab === 'hyperrag' ? hyperData : discData
+  const current = tab === 'graph_augmented_rag' ? graphData : discData
 
   const describeNode = (n) => {
     if (!n) return null
-    if (tab === 'hyperrag') {
+    if (tab === 'graph_augmented_rag') {
       return `Section: ${n.section || 'general'} · Page ${n.page ?? 'n/a'}. This node represents a text chunk from the report used in retrieval.`
     }
     if (tab === 'discourse') {
@@ -68,7 +68,7 @@ export default function GraphsPage({ company }) {
         <div className="card-body" style={{ paddingBottom: 12 }}>
           {/* Tab toggle */}
           <div className="tab-nav" style={{ marginBottom: 16 }}>
-            <button className={`tab-item ${tab === 'hyperrag' ? 'active' : ''}`} onClick={() => setTab('hyperrag')}>
+            <button className={`tab-item ${tab === 'graph_augmented_rag' ? 'active' : ''}`} onClick={() => setTab('graph_augmented_rag')}>
               <GitBranch size={13} /> Graph-Augmented RAG
             </button>
             <button className={`tab-item ${tab === 'discourse' ? 'active' : ''}`} onClick={() => setTab('discourse')}>
@@ -78,7 +78,7 @@ export default function GraphsPage({ company }) {
 
           {/* Legend */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 10, fontSize: 11 }}>
-            {tab === 'hyperrag' ? (
+            {tab === 'graph_augmented_rag' ? (
               Object.entries(SECTION_COLORS).slice(0, 8).map(([sec, color]) => (
                 <span key={sec} style={{ display: 'flex', alignItems: 'center', gap: 4, color: 'var(--text3)' }}>
                   <span style={{ width: 8, height: 8, borderRadius: '50%', background: color, display: 'inline-block' }} />
@@ -113,7 +113,7 @@ export default function GraphsPage({ company }) {
               <ForceGraph
                 nodes={current.nodes.map(n => ({ id: n.id, label: n.label, section: n.section, type: n.type, page: n.page }))}
                 edges={current.edges.map(e => ({ source: e.source, target: e.target, relation: e.relation }))}
-                colorFn={tab === 'hyperrag' ? hyperColorFn : discColorFn}
+                colorFn={tab === 'graph_augmented_rag' ? graphColorFn : discColorFn}
                 height={380}
                 onNodeClick={setSelectedNode}
               />

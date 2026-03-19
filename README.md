@@ -11,7 +11,7 @@ PDF Upload
   → Semantic chunking (300-600 token, section-aware, overlap)
   → MiniLM-L6 embedding (384-dim)
   → Qdrant local vector store (cosine similarity, metadata filtering)
-  → HyperRAG graph traversal (sequential + cross-section edges)
+  → Graph-Augmented RAG traversal (sequential + cross-section edges)
   → Discourse graph (claim/evidence nodes, contradiction/support edges)
   → ESG metrics extraction (regex: Scope 1/2/3, revenue, renewable %, ...)
   → Supply chain extraction (supplier/logistics pattern matching)
@@ -29,7 +29,7 @@ PDF Upload
 | Backend | Flask + Flask-CORS |
 | Embeddings | sentence-transformers/all-MiniLM-L6-v2 (~90MB) |
 | Vector DB | Qdrant (local file mode, `qdrant_db/`) |
-| Graphs | NetworkX (HyperRAG + Discourse) |
+| Graphs | NetworkX (Graph-Augmented RAG + Discourse) |
 | PDF | PyMuPDF (fitz) — text + table extraction |
 | ML | scikit-learn (optional utilities) |
 
@@ -63,13 +63,13 @@ npm run dev
 |------|-------------|
 | Upload Report | PDF upload with pipeline progress visualization |
 | ESG Metrics | Scope 1/2/3, carbon intensity, renewable %, ESG-CAM, radar chart |
-| Query Engine | HyperRAG semantic search with section filtering |
+| Query Engine | Graph-Augmented RAG semantic search with section filtering |
 | Greenwashing | Discourse graph contradiction detection + vague claim analysis |
 | Supply Chain | Supplier extraction, risk scoring, force-directed network graph |
 | Climate Risk | Hazard scores, transition risk, TCFD quality, scenario analysis |
 | Financing | ESG-CAM credit rating, ICMA instrument recommendations |
 | Scenarios | Simulate renewable transition / supply restructure / emissions reduction |
-| Graphs | Interactive canvas HyperRAG + discourse knowledge graphs |
+| Graphs | Interactive canvas Graph-Augmented RAG + discourse knowledge graphs |
 
 ## API Endpoints
 
@@ -79,7 +79,7 @@ npm run dev
 | `/api/analyze` | POST | Full analysis pipeline |
 | `/api/query` | POST | Graph-Augmented RAG query |
 | `/api/greenwashing/:company` | GET | Greenwashing report |
-| `/api/graph/hyperrag/:company` | GET | Graph-Augmented RAG graph data |
+| `/api/graph/graph_augmented_rag/:company` | GET | Graph-Augmented RAG graph data |
 | `/api/graph/discourse/:company` | GET | Discourse graph data |
 | `/api/supply_chain/:company` | GET | Supply chain data |
 | `/api/esg_credit_score/:company` | GET | ESG-CAM + financing |
@@ -99,7 +99,7 @@ esg-platform/
 │   ├── pdf_parser.py       PyMuPDF + table extraction + section detection
 │   ├── chunker.py          Semantic section-aware chunking
 │   ├── vector_store.py     Qdrant upsert/search/delete + company filter
-│   ├── hyperrag.py         NetworkX HyperRAG graph + multi-hop retrieval
+│   ├── graph_augmented_rag.py         NetworkX Graph-Augmented RAG graph + multi-hop retrieval
 │   ├── discourse_graph.py  Claim/evidence/contradiction detection
 │   ├── esg_metrics.py      Full metric extraction + ESG score computation
 │   ├── supply_chain.py     Supplier/logistics extraction + optimization recs
@@ -116,7 +116,7 @@ esg-platform/
     │   ├── pages/
     │   │   ├── UploadPage.jsx       PDF upload + pipeline steps
     │   │   ├── MetricsPage.jsx      Full metrics dashboard
-    │   │   ├── QueryPage.jsx        HyperRAG query engine
+    │   │   ├── QueryPage.jsx        Graph-Augmented RAG query engine
     │   │   ├── GreenwashingPage.jsx Contradiction explorer
     │   │   ├── SupplyChainPage.jsx  Network graph + tables
     │   │   ├── ClimateRiskPage.jsx  Hazard scores + scenarios

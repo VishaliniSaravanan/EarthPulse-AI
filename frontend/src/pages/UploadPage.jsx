@@ -6,6 +6,8 @@ import {
 import { analyzeESG } from '../utils/api'
 import { Spinner } from '../components/ui'
 
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/$/, '')
+
 const SECTORS = ['Energy','Technology','Manufacturing','Finance','Healthcare',
                  'Consumer','Utilities','Real Estate','Agriculture','Other']
 
@@ -107,7 +109,7 @@ export default function UploadPage({ onAnalyzed }) {
     try {
       let url = fetchUrl.trim()
       if (!url.startsWith('http')) url = 'https://' + url
-      const res = await fetch(`/api/fetch_report?url=${encodeURIComponent(url)}`)
+      const res = await fetch(`${API_BASE_URL}/fetch_report?url=${encodeURIComponent(url)}`)
       if (!res.ok) {
         const err = await res.json().catch(() => ({}))
         throw new Error(err.error || `HTTP ${res.status}`)

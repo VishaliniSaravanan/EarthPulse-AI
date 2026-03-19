@@ -12,3 +12,7 @@ sentence-transformers
 requests
 python-dateutil
 python-docx
+anthropic
+opencv-python-headless
+openai-whisper
+gunicorn

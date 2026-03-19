@@ -191,8 +191,8 @@ def _run_pipeline(full_text: str, doc: dict, company: str, sector: str, ext: str
     delete_company(company)
     indexed = index_chunks(chunks)
 
-    from hyperrag import build_hyperrag_graph
-    build_hyperrag_graph(chunks, company)
+    from graph_augmented_rag import build_graph_augmented_rag_graph
+    build_graph_augmented_rag_graph(chunks, company)
 
     from esg_metrics import extract_all
     metrics = extract_all(full_text)
@@ -467,8 +467,8 @@ def query():
         if not question:
             return jsonify({'error': 'No question provided'}), 400
 
-        from hyperrag import hyperrag_query
-        chunks = hyperrag_query(question, company, k=5)
+        from graph_augmented_rag import graph_augmented_rag_query
+        chunks = graph_augmented_rag_query(question, company, k=5)
 
         if not chunks:
             return jsonify({'answer': 'No relevant information found.',
@@ -501,11 +501,11 @@ def greenwashing(company):
 # ─────────────────────────────────────────────────────────────────────────────
 # Graphs
 # ─────────────────────────────────────────────────────────────────────────────
-@app.route('/api/graph/hyperrag/<company>')
-def graph_hyperrag(company):
+@app.route('/api/graph/graph_augmented_rag/<company>')
+def graph_augmented_rag(company):
     try:
-        from hyperrag import get_graph_export
-        return jsonify(get_graph_export(company))
+        from graph_augmented_rag import get_graph_augmented_rag_export
+        return jsonify(get_graph_augmented_rag_export(company))
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -668,4 +668,6 @@ def analyze_media_route():
 # Run
 # ─────────────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
-    app.run(debug=True, port=5001, use_reloader=False)
+    port = int(os.environ.get('PORT', '5001'))
+    # In Render we must listen on 0.0.0.0 and use the provided PORT.
+    app.run(host='0.0.0.0', debug=False, port=port, use_reloader=False)
